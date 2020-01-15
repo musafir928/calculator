@@ -1,25 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Buttons from "./components/buttons";
+import Input from "./components/input";
+import "./App.css";
 
 function App() {
+  const [target, setTarget] = useState("");
+  const [last, setLast] = useState(false);
+
+  const handleClick = e => {
+    e.preventDefault();
+    let newText;
+    const btn = e.target.value;
+
+    if (Number(btn) <= 9 && Number(btn) >= 0 && last) {
+      setTarget(btn);
+      setLast(false);
+    } else {
+      if (btn !== "=" && btn !== "AC") {
+        newText = target + btn;
+        setTarget(newText);
+      }
+      if (btn === "=") {
+        newText = eval(target);
+        setTarget(newText);
+        setLast(true);
+      }
+      if (btn === "AC") {
+        setTarget("");
+        setLast(false);
+      }
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className='cal'>
+        <Input target={target} />
+        <Buttons handleClick={handleClick} />
+      </div>
+    </>
   );
 }
 
